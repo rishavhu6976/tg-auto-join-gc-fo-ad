@@ -1,0 +1,1 @@
+# tg-auto-join-gc-fo-ad
