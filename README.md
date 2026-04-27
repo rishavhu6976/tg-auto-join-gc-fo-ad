@@ -1,174 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Telegram Auto Group Joiner</title>
+# 📲 Telegram Group Auto-Joiner
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+A Python script that automatically joins a list of Telegram groups/channels using the [Pyrogram](https://docs.pyrogram.org/) MTProto client.
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-      background: #0d1117;
-      color: #c9d1d9;
-      line-height: 1.6;
-    }
+---
 
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 30px 20px;
-    }
+## ✨ Features
 
-    h1 {
-      font-size: 2.2rem;
-      color: #58a6ff;
-      margin-bottom: 10px;
-    }
+- ✅ Supports **public usernames** (`t.me/username`) and **private invite links** (`t.me/+hash`)
+- 🛡️ Graceful error handling: `FloodWait`, `PeerFlood`, bans, expired links, group limits
+- 🔁 Auto-deduplication of the link list before processing
+- 📊 Live progress log + final summary report
+- 🛑 Auto-stops when Telegram's group membership limit is reached
 
-    h2 {
-      margin-top: 30px;
-      margin-bottom: 10px;
-      color: #58a6ff;
-      border-bottom: 1px solid #30363d;
-      padding-bottom: 5px;
-    }
+---
 
-    p {
-      margin: 10px 0;
-    }
+## 📦 Requirements
 
-    ul {
-      margin-left: 20px;
-      margin-top: 10px;
-    }
+- Python **3.8+**
+- Pyrogram + TgCrypto
 
-    li {
-      margin-bottom: 8px;
-    }
+```bash
+pip install pyrogram tgcrypto
+```
 
-    pre {
-      background: #161b22;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin-top: 10px;
-    }
+---
 
-    code {
-      background: #161b22;
-      padding: 3px 6px;
-      border-radius: 5px;
-    }
+## ⚙️ Setup
 
-    .box {
-      background: #161b22;
-      padding: 15px;
-      border-left: 4px solid #58a6ff;
-      margin: 20px 0;
-      border-radius: 6px;
-    }
+### 1. Get API credentials
 
-    .footer {
-      margin-top: 40px;
-      font-size: 0.9rem;
-      color: #8b949e;
-      text-align: center;
-    }
+Go to [my.telegram.org](https://my.telegram.org), log in, and create an app to get your **API ID** and **API Hash**.
 
-    .badge {
-      display: inline-block;
-      background: #238636;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      margin-right: 5px;
-      font-size: 0.85rem;
-    }
+### 2. Edit the config
 
-  </style>
-</head>
+Open the script and fill in your credentials at the top:
 
-<body>
-  <div class="container">
-
-    <h1>🚀 Telegram Auto Group Joiner</h1>
-
-    <p>
-      Automate joining multiple groups on <strong>Telegram</strong> using Python and Pyrogram.
-    </p>
-
-    <div class="box">
-      Bulk join public & private groups with smart rate-limit handling and summary reports.
-    </div>
-
-    <div>
-      <span class="badge">Python</span>
-      <span class="badge">Pyrogram</span>
-      <span class="badge">Automation</span>
-    </div>
-
-    <h2>✨ Features</h2>
-    <ul>
-      <li>Join hundreds of groups automatically</li>
-      <li>Removes duplicate links</li>
-      <li>Handles FloodWait, PeerFlood, invalid links</li>
-      <li>Adjustable delay system</li>
-      <li>Final summary output</li>
-    </ul>
-
-    <h2>📦 Installation</h2>
-    <pre>
-git clone https://github.com/your-username/telegram-auto-joiner.git
-cd telegram-auto-joiner
-pip install -r requirements.txt
-    </pre>
-
-    <h2>⚙️ Configuration</h2>
-    <pre>
-API_ID = 123456
+```python
+API_ID   = 123456          # From my.telegram.org
 API_HASH = "your_api_hash"
 SESSION_NAME = "joiner_session"
-DELAY_BETWEEN_JOINS = 4
-    </pre>
+DELAY_BETWEEN_JOINS = 4    # Seconds between each join
+```
 
-    <h2>▶️ Usage</h2>
-    <pre>
-python main.py
-    </pre>
+### 3. Add your group links
 
-    <h2>📊 Output Example</h2>
-    <pre>
-[  1/500] @group → joined
-[  2/500] @group → already_in
-[  3/500] @group → invalid_link
-    </pre>
+Paste your group URLs into the `RAW_LINKS` string (one per line):
 
-    <h2>⚠️ Limitations</h2>
-    <ul>
-      <li>Telegram group limit ~500</li>
-      <li>Fast joining may trigger FloodWait</li>
-    </ul>
+```python
+RAW_LINKS = """
+https://t.me/+SomePrivateHash
+https://t.me/SomePublicGroup
+...
+"""
+```
 
-    <h2>🛡️ Safety Tips</h2>
-    <ul>
-      <li>Use a secondary account</li>
-      <li>Increase delay if needed</li>
-      <li>Avoid spam groups</li>
-    </ul>
+### 4. Run the script
 
-    <h2>📜 License</h2>
-    <p>MIT License</p>
+```bash
+python joiner.py
+```
 
-    <div class="footer">
-      Made for educational purposes • Use responsibly
-    </div>
+> On first run, Pyrogram will ask for your phone number and OTP to create a session file.
 
-  </div>
-</body>
-</html>
+---
+
+## 🔧 Configuration
+
+| Variable | Default | Description |
+|---|---|---|
+| `API_ID` | — | Your Telegram API ID |
+| `API_HASH` | — | Your Telegram API Hash |
+| `SESSION_NAME` | `joiner_session` | Name of the saved `.session` file |
+| `DELAY_BETWEEN_JOINS` | `4` | Seconds to wait between each join request |
+| `RAW_LINKS` | — | Newline-separated list of group URLs |
+
+---
+
+## 📋 Sample Output
+
+```
+==================================================
+  🤖 Logged in as: John (@john_doe)
+  📋 Total groups to process: 320
+==================================================
+
+[  1/320] @SomeGroup                          → joined
+[  2/320] @AnotherGroup                       → already_in
+[  3/320] @+ExpiredHash                       → invalid_link
+...
+
+==================================================
+           📊  FINAL SUMMARY
+==================================================
+  ✅  Newly joined      : 42
+  👤  Already in        : 18
+  🔗  Invalid/expired   : 5
+  🚫  Banned            : 1
+  ⚠️   Peer flood hit    : 0
+  ⏳  Flood waited      : 2
+  ❌  Errors            : 3
+  📦  Group limit hit   : 0
+──────────────────────────────────────────────────
+  📌  Total processed   : 71 / 320
+==================================================
+```
+
+---
+
+## ⚠️ Notes
+
+- Telegram limits accounts to **500 groups/channels** total. The script stops automatically when this limit is hit.
+- Keep `DELAY_BETWEEN_JOINS` at **4+ seconds** to avoid flood errors. Use **10–15s** for newer accounts.
+- This uses a **user account** (not a bot token) — use responsibly and in accordance with [Telegram's Terms of Service](https://telegram.org/tos).
+
+---
+
+## 📄 License
+
+MIT
