@@ -31,8 +31,8 @@ Automate joining multiple Telegram groups using Python and Pyrogram.
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/your-username/telegram-auto-joiner.git
-cd telegram-auto-joiner
+git clone https://github.com/rishavhu6976/tg-auto-join-gc-fo-ad.git
+cd tg-auto-join-gc-fo-ad
 pip install -r requirements.txt
 ⚙️ Configuration
 
